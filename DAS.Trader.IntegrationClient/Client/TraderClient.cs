@@ -2,17 +2,18 @@
 using System.Net.Sockets;
 using DAS.Trader.IntegrationClient.Commands;
 using DAS.Trader.IntegrationClient.Commands.Interfaces;
+using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Client;
 
 internal class TraderClient : IDisposable
 {
     private const int DefaultTimeOutInSeconds = 3;
+    private readonly CancellationToken _cancellationToken;
     private readonly IPEndPoint _ipEndPoint;
     private readonly ResponseProcessor _responseProcessor;
     private readonly TcpClient _tcpClient;
     private readonly TimeSpan _timeOut;
-    private readonly CancellationToken _cancellationToken;
     private NetworkStream? _currentStream;
 
     public TraderClient(string ipAddress, int port, TimeSpan? timeOut = null)
@@ -42,6 +43,37 @@ internal class TraderClient : IDisposable
         return _currentStream ??= _tcpClient.GetStream();
     }
 
+    public event EventHandler<ResponseEventArgs> PriceInquiry
+    {
+        add => _responseProcessor.PriceInquiry += value;
+        remove => _responseProcessor.PriceInquiry -= value;
+    }
+
+    public event EventHandler<ResponseEventArgs> LoginResponse
+    {
+        add => _responseProcessor.LoginResponse += value;
+        remove => _responseProcessor.LoginResponse -= value;
+    }
+
+    public event EventHandler<ResponseEventArgs> SlOrder
+    {
+        add => _responseProcessor.SlOrder += value;
+        remove => _responseProcessor.SlOrder -= value;
+    }
+
+    public event EventHandler<ResponseEventArgs> SlOrderBegin
+    {
+        add => _responseProcessor.SlOrderBegin += value;
+        remove => _responseProcessor.SlOrderBegin -= value;
+    }
+
+    public event EventHandler<ResponseEventArgs> SlOrderEnd
+    {
+        add => _responseProcessor.SlOrderEnd += value;
+        remove => _responseProcessor.SlOrderEnd -= value;
+    }
+
+
     public async Task<ICommandResult> SendCommandAsync(ITcpCommand command)
     {
         ICommandResult? result;
@@ -49,7 +81,7 @@ internal class TraderClient : IDisposable
         var commandText = command.ToString();
         var buffer = command.ToByteArray(commandText);
 
-        Console.Write($"|>>>|    {commandText}");
+        Console.Write($"{new string(' ', 42)}|>>| {commandText}");
 
         try
         {

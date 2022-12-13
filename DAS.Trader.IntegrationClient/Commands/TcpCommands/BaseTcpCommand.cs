@@ -2,6 +2,7 @@
 using DAS.Trader.IntegrationClient.Client;
 using DAS.Trader.IntegrationClient.Commands.Interfaces;
 using DAS.Trader.IntegrationClient.Common;
+using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Commands.TcpCommands;
 

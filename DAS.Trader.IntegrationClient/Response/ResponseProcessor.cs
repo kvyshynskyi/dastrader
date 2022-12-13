@@ -3,11 +3,10 @@ using System.ComponentModel;
 using System.Net.Sockets;
 using System.Text;
 using DAS.Trader.IntegrationClient.Commands;
-using DAS.Trader.IntegrationClient.Common;
 
-namespace DAS.Trader.IntegrationClient.Client;
+namespace DAS.Trader.IntegrationClient.Response;
 
-public class ResponseProcessor
+public partial class ResponseProcessor
 {
     private readonly ConcurrentDictionary<TraderCommandType, object> _eventKeys = new();
     protected EventHandlerList ListEventDelegates = new();
@@ -15,9 +14,12 @@ public class ResponseProcessor
     public ResponseProcessor(CancellationToken cancellationToken)
     {
         CancellationToken = cancellationToken;
+        WrapResponse += ResponseWrapper.WrapResponse;
     }
 
     public CancellationToken CancellationToken { get; }
+
+    private event EventHandler<WrapResponseEventArgs> WrapResponse;
 
     public async Task ListenAsync(NetworkStream networkStream)
     {
@@ -25,21 +27,39 @@ public class ResponseProcessor
             await ReadStreamAsync(networkStream);
     }
 
-    public event EventHandler<ResponseEventHandlerArgs> LoginResponse
+    public event EventHandler<ResponseEventArgs> LoginResponse
     {
         add => ListEventDelegates.AddHandler(GetEventKey(TraderCommandType.LOGIN_RESPONSE), value);
         remove => ListEventDelegates.RemoveHandler(GetEventKey(TraderCommandType.LOGIN_RESPONSE), value);
     }
 
-    public event EventHandler<ResponseEventHandlerArgs> PriceInquiry
+    public event EventHandler<ResponseEventArgs> PriceInquiry
     {
         add => ListEventDelegates.AddHandler(GetEventKey(TraderCommandType.SLRET_RESPONSE), value);
         remove => ListEventDelegates.RemoveHandler(GetEventKey(TraderCommandType.SLRET_RESPONSE), value);
     }
 
-    protected virtual void RiseEvent(ResponseEventHandlerArgs e)
+    public event EventHandler<ResponseEventArgs> SlOrderBegin
     {
-        var eventHandler = ListEventDelegates[GetEventKey(e.CommandType)] as EventHandler<ResponseEventHandlerArgs>;
+        add => ListEventDelegates.AddHandler(GetEventKey(TraderCommandType.SLORDER_BEGIN_RESPONSE), value);
+        remove => ListEventDelegates.RemoveHandler(GetEventKey(TraderCommandType.SLORDER_BEGIN_RESPONSE), value);
+    }
+
+    public event EventHandler<ResponseEventArgs> SlOrderEnd
+    {
+        add => ListEventDelegates.AddHandler(GetEventKey(TraderCommandType.SLORDER_END_RESPONSE), value);
+        remove => ListEventDelegates.RemoveHandler(GetEventKey(TraderCommandType.SLORDER_END_RESPONSE), value);
+    }
+
+    public event EventHandler<ResponseEventArgs> SlOrder
+    {
+        add => ListEventDelegates.AddHandler(GetEventKey(TraderCommandType.SLORDER_RESPONSE), value);
+        remove => ListEventDelegates.RemoveHandler(GetEventKey(TraderCommandType.SLORDER_RESPONSE), value);
+    }
+
+    protected virtual void RiseEvent(ResponseEventArgs e)
+    {
+        var eventHandler = ListEventDelegates[GetEventKey(e.CommandType)] as EventHandler<ResponseEventArgs>;
         eventHandler?.Invoke(this, e);
     }
 
@@ -51,10 +71,11 @@ public class ResponseProcessor
     private async Task ReadStreamAsync(NetworkStream networkStream)
     {
         if (!networkStream.DataAvailable) return;
+        Guid correlationId = Guid.NewGuid();
 
         var sb = new StringBuilder();
 
-        const int chunkSize = 10_240; //10KB
+        const int chunkSize = 1_024; //1KB
         var buffer = new byte[chunkSize];
         int bytesRead;
 
@@ -65,25 +86,12 @@ public class ResponseProcessor
             if (bytesRead < chunkSize) break;
         }
 
-        foreach (var line in sb.ToString().Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
-        {
-            ProceedLine(line);
-            Console.WriteLine($"|<--|    {line}");
-        }
+        Task.Factory.StartNew(() => OnWrapResponse(new WrapResponseEventArgs(sb, correlationId)),
+            TaskCreationOptions.LongRunning);
     }
 
-    private void ProceedLine(string line)
+    protected void OnWrapResponse(WrapResponseEventArgs e)
     {
-        if (line.StartsWith(TraderCommandType.LOGIN_RESPONSE.GetDescription() ?? string.Empty,
-                StringComparison.InvariantCultureIgnoreCase))
-        {
-            var args = new ResponseEventHandlerArgs
-            {
-                CommandType = TraderCommandType.LOGIN_RESPONSE,
-                Message = line
-            };
-            RiseEvent(args);
-            Console.WriteLine($"|<<<|    Event detected: {TraderCommandType.LOGIN_RESPONSE}");
-        }
+        WrapResponse?.Invoke(this, e);
     }
 }

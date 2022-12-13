@@ -1,4 +1,5 @@
 ﻿using DAS.Trader.IntegrationClient.Client;
+using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Commands.Interfaces;
 
