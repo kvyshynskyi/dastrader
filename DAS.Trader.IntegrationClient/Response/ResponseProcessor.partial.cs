@@ -6,7 +6,7 @@ namespace DAS.Trader.IntegrationClient.Response;
 
 public partial class ResponseProcessor
 {
-    protected class WrapResponseEventArgs : EventArgs
+    private class WrapResponseEventArgs : EventArgs
     {
         public WrapResponseEventArgs(StringBuilder responseStringBuilder, Guid correlationId)
         {
@@ -18,15 +18,12 @@ public partial class ResponseProcessor
         public Guid CorrelationId { get; }
     }
 
-    protected class ResponseWrapper
+    private static class ResponseWrapper
     {
         internal static void WrapResponse(object? sender, WrapResponseEventArgs e)
         {
             if (sender == null)
                 return;
-
-            //var value = Random.Shared.Next(1,10);
-            //Thread.Sleep(TimeSpan.FromSeconds(value));
 
             var rp = (ResponseProcessor)sender;
 
@@ -34,7 +31,6 @@ public partial class ResponseProcessor
                          .Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
             {
                 ProceedLine(rp, line, e.CorrelationId);
-                //Console.WriteLine($"|<--|    {line}, thread was sleep for {value} second(s)");
                 Console.WriteLine($"|<-| {e.CorrelationId.ToString().ToUpper()} |<-| {line}");
             }
         }
@@ -49,45 +45,124 @@ public partial class ResponseProcessor
                 .Split(separator, paramsCount, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private static void ProceedLine(ResponseProcessor rp, string line, Guid correlationId)
+        private static void ProceedLine(ResponseProcessor rp, string value, Guid correlationId)
         {
             ResponseEventArgs args;
             const StringComparison ignoreCase = StringComparison.InvariantCultureIgnoreCase;
 
-            var loginResponse = TraderCommandType.LOGIN_RESPONSE;
-            var slPriceResponse = TraderCommandType.SLRET_RESPONSE;
-            var slOrderEndResponse = TraderCommandType.SLORDER_END_RESPONSE;
-            var slOrderBeginResponse = TraderCommandType.SLORDER_BEGIN_RESPONSE;
-            var slOrderResponse = TraderCommandType.SLORDER_RESPONSE;
-
-            switch (line)
+            switch (value)
             {
-                case { } when line.StartsWith(loginResponse.GetDescription()!, ignoreCase):
-                    args = GetResponseEventArgs(line, correlationId, loginResponse);
+                case { } when value.StartsWith(TraderCommandType.LOGIN_RESPONSE.GetDescription()!, ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.LOGIN_RESPONSE);
                     break;
-                case { } when line.StartsWith(slPriceResponse.GetDescription()!,
+                case { } when value.StartsWith(TraderCommandType.SLRET_RESPONSE.GetDescription()!,
                     ignoreCase):
-                    args = GetResponseEventArgs(line, correlationId, slPriceResponse);
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.SLRET_RESPONSE);
                     break;
-                case { } when line.StartsWith(slOrderEndResponse.GetDescription()!,
+                case { } when value.StartsWith(TraderCommandType.SLORDER_END_RESPONSE.GetDescription()!,
                     ignoreCase):
-                    args = GetResponseEventArgs(line, correlationId, slOrderEndResponse);
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.SLORDER_END_RESPONSE);
                     break;
-                case { } when line.StartsWith(slOrderBeginResponse.GetDescription()!,
+                case { } when value.StartsWith(TraderCommandType.SLORDER_BEGIN_RESPONSE.GetDescription()!,
                     ignoreCase):
-                    args = GetResponseEventArgs(line, correlationId, slOrderBeginResponse);
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.SLORDER_BEGIN_RESPONSE);
                     break;
-                case { } when line.StartsWith(slOrderResponse.GetDescription()!,
+                case { } when value.StartsWith(TraderCommandType.SLORDER_RESPONSE.GetDescription()!,
                     ignoreCase):
-                    args = GetResponseEventArgs(line, correlationId, slOrderResponse);
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.SLORDER_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.POS_END_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.POS_END_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.POS_BEGIN_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.POS_BEGIN_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.POS_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.POS_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ORDER_END_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_END_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ORDER_BEGIN_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_BEGIN_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ORDER_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.TRADE_END_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.TRADE_END_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.TRADE_BEGIN_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.TRADE_BEGIN_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.TRADE_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.TRADE_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ORDER_ACTION_MESSAGE_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_ACTION_MESSAGE_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.BUYING_POWER_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.BUYING_POWER_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.CLIENT_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.CLIENT_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.SHORTINFO_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.SHORTINFO_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.QUOTE_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.QUOTE_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.LDLU_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.LDLU_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.IPOS_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.IPOS_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.IORDER_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.IORDER_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ITRADE_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ITRADE_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.TS_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.TS_RESPONSE);
                     break;
 
+                case { } when value.StartsWith(TraderCommandType.LV2_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.LV2_RESPONSE);
+                    break;
+
+                case { } when value.StartsWith(TraderCommandType.BAR_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.BAR_RESPONSE);
+                    break;
                 default:
                     return;
             }
 
             rp.RiseEvent(args);
-            //Console.WriteLine($"|<<<|    Event detected: {args.CommandType} |<<<|    With {args.Parameters.Length} params |<<<|    {string.Join(", ", args.Parameters)}");
+            //Console.WriteLine($"|<-| {args.CorrelationId.ToString().ToUpper()} |<<| Event detected: {args.CommandType} |<<| {args.Parameters.Length} params |<<| {string.Join(", ", args.Parameters)}");
         }
 
         private static ResponseEventArgs GetResponseEventArgs(string value, Guid correlationId,

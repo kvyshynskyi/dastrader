@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/DAS.Trader.IntegrationClient/appsettings.local.json

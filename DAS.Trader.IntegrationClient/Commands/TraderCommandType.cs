@@ -25,7 +25,8 @@ public enum TraderCommandType
     ///     Mark the start when the server sends position list to
     ///     the client.
     /// </summary>
-    [Description("#POS")] POS_BEGIN_RESPONSE,
+    [Description("#POS")] [ParametersCount(7)]
+    POS_BEGIN_RESPONSE,
 
     /// <summary>
     ///     #POSEND
@@ -38,7 +39,8 @@ public enum TraderCommandType
     ///     %POS
     ///     Position Details
     /// </summary>
-    [Description("%POS")] POS_RESPONSE,
+    [Description("%POS")] [ParametersCount(7)]
+    POS_RESPONSE,
 
     /// <summary>
     ///     POSREFRESH
@@ -51,7 +53,8 @@ public enum TraderCommandType
     ///     Mark the start when the server sends order list to
     ///     the client.
     /// </summary>
-    [Description("#Order")] ORDER_BEGIN_RESPONSE,
+    [Description("#Order")] [ParametersCount(12)]
+    ORDER_BEGIN_RESPONSE,
 
     /// <summary>
     ///     #OrderEnd
@@ -64,20 +67,23 @@ public enum TraderCommandType
     ///     %ORDER
     ///     Order details
     /// </summary>
-    [Description("%ORDER")] ORDER_RESPONSE,
+    [Description("%ORDER")] [ParametersCount(12)]
+    ORDER_RESPONSE,
 
     /// <summary>
     ///     %OrderAct
     ///     Order’s action message.
     /// </summary>
-    [Description("%OrderAct")] ORDER_ACTION_MESSAGE_RESPONSE,
+    [Description("%OrderAct")] [ParametersCount(9)]
+    ORDER_ACTION_MESSAGE_RESPONSE,
 
     /// <summary>
     ///     #Trade
     ///     Mark the start when the server sends trade list to
     ///     the client.
     /// </summary>
-    [Description("#Trade")] TRADE_BEGIN_RESPONSE,
+    [Description("#Trade")] [ParametersCount(8)]
+    TRADE_BEGIN_RESPONSE,
 
     /// <summary>
     ///     #TradeEnd
@@ -90,7 +96,8 @@ public enum TraderCommandType
     ///     %TRADE
     ///     Trade details
     /// </summary>
-    [Description("%TRADE")] TRADE_RESPONSE,
+    [Description("%TRADE")] [ParametersCount(8)]
+    TRADE_RESPONSE,
 
     /// <summary>
     ///     NEWORDER
@@ -115,7 +122,8 @@ public enum TraderCommandType
     ///     The server sends the account’s current day buying
     ///     power and overnight buying power of the account.
     /// </summary>
-    [Description("BP")] BUYING_POWER_RESPONSE,
+    [Description("BP")] [ParametersCount(2)]
+    BUYING_POWER_RESPONSE,
 
     /// <summary>
     ///     GET SHORTINFO
@@ -128,7 +136,8 @@ public enum TraderCommandType
     ///     $SHORTINFO
     ///     This is returned symbol shortable info queried by GET SHORTINFO
     /// </summary>
-    [Description("$SHORTINFO")] SHORTINFO_RESPONSE,
+    [Description("$SHORTINFO")] [ParametersCount(6)]
+    SHORTINFO_RESPONSE,
 
     /// <summary>
     ///     SB
@@ -146,50 +155,58 @@ public enum TraderCommandType
     ///     $Quote
     ///     Symbol’s level1 quote data.
     /// </summary>
-    [Description("$Quote")] QUOTE_RESPONSE,
+    [Description("$Quote")] [ParametersCount(17)]
+    QUOTE_RESPONSE,
 
     /// <summary>
     ///     $T&S
     ///     Symbol’s time/sale quote data.
     /// </summary>
-    [Description("$T&S")] TS_RESPONSE,
+    [Description("$T&S")] [ParametersCount(8)]
+    TS_RESPONSE,
 
     /// <summary>
     ///     $Lv2
     ///     Symbol’s level2 quote data.
     /// </summary>
-    [Description("$Lv2")] LV2_RESPONSE,
+    [Description("$Lv2")] [ParametersCount(5)]
+    LV2_RESPONSE,
 
     /// <summary>
     ///     $BAR
     ///     Day/Minute chart data.
     /// </summary>
-    [Description("$BAR")] BAR_RESPONSE,
+    [Description("$BAR")] [ParametersCount(8)]
+    BAR_RESPONSE,
 
     /// <summary>
     ///     $LDLU
     ///     Limit Down Price/Limit Up Price
     /// </summary>
-    [Description("$LDLU")] LDLU_RESPONSE,
+    [Description("$LDLU")] [ParametersCount(3)]
+    LDLU_RESPONSE,
 
     /// <summary>
     ///     %IORDER
     ///     Same definition with %ORDER, but for watch
     ///     connection.
     /// </summary>
-    [Description("%IORDER")] IORDER_RESPONSE,
+    [Description("%IORDER")] [ParametersCount(12)]
+    IORDER_RESPONSE,
 
     /// <summary>
     ///     %IPOS
     ///     Same definition with %POS, but for watch
     ///     connection.
     /// </summary>
-    [Description("%IPOS")] IPOS_RESPONSE,
+    [Description("%IPOS")] [ParametersCount(7)]
+    IPOS_RESPONSE,
 
     /// <summary>
     ///     %ITRADE
     /// </summary>
-    [Description("%ITRADE")] ITRADE_RESPONSE,
+    [Description("%ITRADE")] [ParametersCount(8)]
+    ITRADE_RESPONSE,
 
     /// <summary>
     ///     ECHO
@@ -202,6 +219,13 @@ public enum TraderCommandType
     ///     The server will return connected client numbers.
     /// </summary>
     [Description("CLIENT")] CLIENT_COMMAND,
+
+    /// <summary>
+    ///     CLIENT
+    ///     Connected client numbers.
+    /// </summary>
+    [Description("Client number")] [ParametersCount(1)]
+    CLIENT_RESPONSE,
 
     /// <summary>
     ///     Order Server connection status

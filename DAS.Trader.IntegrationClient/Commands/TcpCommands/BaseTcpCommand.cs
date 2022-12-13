@@ -34,7 +34,13 @@ public abstract class BaseTcpCommand : ITcpCommand
 
         sb.Append(Name);
 
-        foreach (var param in Params) sb.Append($" {param}");
+        foreach (var param in Params)
+        {
+            if (string.IsNullOrWhiteSpace(param))
+                continue;
+
+            sb.Append($" {param}");
+        }
 
         sb.Append("\r\n");
 
