@@ -1,7 +1,7 @@
 ﻿using DAS.Trader.IntegrationClient.Client;
-using DAS.Trader.IntegrationClient.Commands.Interfaces;
 using DAS.Trader.IntegrationClient.Commands.TcpCommands;
 using DAS.Trader.IntegrationClient.Enums;
+using DAS.Trader.IntegrationClient.Interfaces;
 using DAS.Trader.IntegrationClient.Response;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -92,12 +92,12 @@ async Task ReadAsync()
     Console.WriteLine("Press Enter key to use QUIT command");
     Console.ReadLine();
 
-    client.SendCommandAsync(new UnSubscribeLevel1Command("MSFT"));
-    client.SendCommandAsync(QuitCommand.Instance);
+    await client.SendCommandAsync(new UnSubscribeLevel1Command("MSFT"));
+    await client.SendCommandAsync(QuitCommand.Instance);
 }
 
 void EventNotification(object? sender, ResponseEventArgs args)
 {
     Console.WriteLine(
-        $"|<-| {args.CorrelationId.ToString().ToUpper()} |<<| Event detected: {args.CommandType} |<<| {args.Parameters.Length} params |<<| {string.Join(", ", args.Parameters)}");
+        $"|<-| {args.CorrelationId.ToString().ToUpper()} |<<| Event detected: {args.CommandType} |<<| {args.Parameters?.Length} params |<<| {string.Join(", ", args.Parameters ?? Array.Empty<string>())}");
 }

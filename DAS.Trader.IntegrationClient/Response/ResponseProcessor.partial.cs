@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using DAS.Trader.IntegrationClient.Commands;
 using DAS.Trader.IntegrationClient.Common;
+using DAS.Trader.IntegrationClient.Enums;
 
 namespace DAS.Trader.IntegrationClient.Response;
 
@@ -31,7 +33,7 @@ public partial class ResponseProcessor
                          .Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
             {
                 ProceedLine(rp, line, e.CorrelationId);
-                Console.WriteLine($"|<-| {e.CorrelationId.ToString().ToUpper()} |<-| {line}");
+                Debug.WriteLine($"|<-| {e.CorrelationId.ToString().ToUpper()} |<-| {line}");
             }
         }
 
@@ -162,7 +164,7 @@ public partial class ResponseProcessor
             }
 
             rp.RiseEvent(args);
-            //Console.WriteLine($"|<-| {args.CorrelationId.ToString().ToUpper()} |<<| Event detected: {args.CommandType} |<<| {args.Parameters.Length} params |<<| {string.Join(", ", args.Parameters)}");
+            //Debug.WriteLine($"|<-| {args.CorrelationId.ToString().ToUpper()} |<<| Event detected: {args.CommandType} |<<| {args.Parameters.Length} params |<<| {string.Join(", ", args.Parameters)}");
         }
 
         private static ResponseEventArgs GetResponseEventArgs(string value, Guid correlationId,

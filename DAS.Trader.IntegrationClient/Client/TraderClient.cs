@@ -1,12 +1,13 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using DAS.Trader.IntegrationClient.Commands;
-using DAS.Trader.IntegrationClient.Commands.Interfaces;
+using DAS.Trader.IntegrationClient.Interfaces;
 using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Client;
 
-internal class TraderClient : IDisposable
+public class TraderClient : ITraderClient
 {
     private const int DefaultTimeOutInSeconds = 3;
     private readonly CancellationToken _cancellationToken;
@@ -27,9 +28,11 @@ internal class TraderClient : IDisposable
 
     public async Task ConnectAsync()
     {
-        await _tcpClient.ConnectAsync(_ipEndPoint);
+        await _tcpClient.ConnectAsync(_ipEndPoint.Address, _ipEndPoint.Port);
+#pragma warning disable CS4014
         Task.Factory.StartNew(item => _responseProcessor.ListenAsync(GetStream()),
             TaskCreationOptions.LongRunning, _cancellationToken);
+#pragma warning restore CS4014
     }
 
     public NetworkStream GetStream()
@@ -44,7 +47,7 @@ internal class TraderClient : IDisposable
         var commandText = command.ToString();
         var buffer = command.ToByteArray(commandText);
 
-        Console.Write($"{new string(' ', 42)}|>>| {commandText}");
+        Debug.Write($"{new string(' ', 42)}|>>| {commandText}");
 
         try
         {
@@ -68,7 +71,7 @@ internal class TraderClient : IDisposable
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Debug.WriteLine(e);
             result = new CommandResult { Message = e.Message };
         }
         finally

@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using DAS.Trader.IntegrationClient.Client;
-using DAS.Trader.IntegrationClient.Commands.Interfaces;
 using DAS.Trader.IntegrationClient.Common;
+using DAS.Trader.IntegrationClient.Enums;
+using DAS.Trader.IntegrationClient.Interfaces;
 using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Commands.TcpCommands;
@@ -49,7 +50,7 @@ public abstract class BaseTcpCommand : ITcpCommand
 
     public bool WaitForResult { get;}
     public bool HasResult { get; protected set; }
-    public virtual object Result { get; protected set; }
+    public virtual object? Result { get; protected set; }
 
     public virtual void Subscribe(ResponseProcessor responseProcessor)
     {

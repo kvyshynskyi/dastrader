@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using DAS.Trader.IntegrationClient.Common;
 
-namespace DAS.Trader.IntegrationClient.Commands;
+namespace DAS.Trader.IntegrationClient.Enums;
 
 public enum TraderCommandType
 {

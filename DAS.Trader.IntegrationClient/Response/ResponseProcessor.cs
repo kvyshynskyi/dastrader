@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Net.Sockets;
 using System.Text;
 using DAS.Trader.IntegrationClient.Commands;
+using DAS.Trader.IntegrationClient.Enums;
+using DAS.Trader.IntegrationClient.Interfaces;
 
 namespace DAS.Trader.IntegrationClient.Response;
 
-public partial class ResponseProcessor
+public partial class ResponseProcessor : IResponseProcessor
 {
     private readonly ConcurrentDictionary<TraderCommandType, object> _eventKeys = new();
     protected EventHandlerList ListEventDelegates = new();
@@ -54,8 +56,10 @@ public partial class ResponseProcessor
             if (bytesRead < chunkSize) break;
         }
 
+#pragma warning disable CS4014
         Task.Factory.StartNew(() => OnWrapResponse(new WrapResponseEventArgs(sb, correlationId)),
             TaskCreationOptions.LongRunning);
+#pragma warning restore CS4014
     }
 
     #region Events

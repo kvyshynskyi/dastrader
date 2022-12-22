@@ -1,7 +1,8 @@
-﻿using DAS.Trader.IntegrationClient.Client;
+﻿using DAS.Trader.IntegrationClient.Commands;
+using DAS.Trader.IntegrationClient.Enums;
 using DAS.Trader.IntegrationClient.Response;
 
-namespace DAS.Trader.IntegrationClient.Commands.Interfaces;
+namespace DAS.Trader.IntegrationClient.Interfaces;
 
 public interface ITcpCommand
 {
@@ -12,7 +13,7 @@ public interface ITcpCommand
     string ToString();
     bool WaitForResult { get; }
     bool HasResult { get; }
-    object Result { get; }
+    object? Result { get; }
     void Subscribe(ResponseProcessor responseProcessor);
     void Unsubscribe(ResponseProcessor responseProcessor);
 }

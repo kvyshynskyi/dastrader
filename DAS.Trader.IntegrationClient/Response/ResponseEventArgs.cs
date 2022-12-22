@@ -1,8 +1,9 @@
 ﻿using DAS.Trader.IntegrationClient.Commands;
+using DAS.Trader.IntegrationClient.Enums;
 
 namespace DAS.Trader.IntegrationClient.Response;
 
-public class ResponseEventArgs:EventArgs
+public class ResponseEventArgs : EventArgs
 {
     public ResponseEventArgs(Guid correlationId, TraderCommandType commandType, string? message = null,
         params string[]? parameters)
@@ -16,6 +17,5 @@ public class ResponseEventArgs:EventArgs
     public string? Message { get; }
     public TraderCommandType CommandType { get; }
     public Guid CorrelationId { get; }
-    public string[]? Parameters { get;}
-    
+    public string[]? Parameters { get; }
 }
