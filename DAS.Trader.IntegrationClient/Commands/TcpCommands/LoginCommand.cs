@@ -1,4 +1,5 @@
 ﻿using DAS.Trader.IntegrationClient.Enums;
+using DAS.Trader.IntegrationClient.Interfaces;
 using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Commands.TcpCommands
@@ -10,7 +11,7 @@ namespace DAS.Trader.IntegrationClient.Commands.TcpCommands
         {
         }
 
-        public override void Subscribe(ResponseProcessor responseProcessor)
+        public override void Subscribe(IResponseProcessor responseProcessor)
         {
             responseProcessor.LoginResponse += ResponseProcessor_LoginResponse;
         }
@@ -22,7 +23,7 @@ namespace DAS.Trader.IntegrationClient.Commands.TcpCommands
             HasResult = true;
         }
 
-        public override void Unsubscribe(ResponseProcessor responseProcessor)
+        public override void Unsubscribe(IResponseProcessor responseProcessor)
         {
             responseProcessor.LoginResponse -= ResponseProcessor_LoginResponse;
         }

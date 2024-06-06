@@ -2,16 +2,6 @@
 
 namespace DAS.Trader.IntegrationClient.Commands.TcpCommands;
 
-#region (Un)Subscribe Commands
-
-#endregion
-
-#region Short Locate Commands
-
-#endregion
-
-#region New Order Commands
-
 /// <summary>
 ///     Hidden order:
 ///     Neworder token b/s symbol route share price Display = 0 / num
@@ -27,4 +17,3 @@ public sealed class HiddenOrderCommand : BaseNewOrderCommand
     }
 }
 
-#endregion

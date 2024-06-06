@@ -6,7 +6,7 @@ namespace DAS.Trader.IntegrationClient.Interfaces;
 public interface IResponseProcessor
 {
     CancellationToken CancellationToken { get; }
-    Task ListenAsync(NetworkStream networkStream);
+    Task ListenAsync(INetworkStream networkStream);
     event EventHandler<ResponseEventArgs> LoginResponse;
     event EventHandler<ResponseEventArgs> PriceInquiry;
     event EventHandler<ResponseEventArgs> SlOrderBegin;

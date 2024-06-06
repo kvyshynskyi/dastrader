@@ -27,14 +27,25 @@ public partial class ResponseProcessor
             if (sender == null)
                 return;
 
-            var rp = (ResponseProcessor)sender;
-
-            foreach (var line in e.ResponseStringBuilder.ToString()
-                         .Split("\r\n", StringSplitOptions.RemoveEmptyEntries))
+            try
             {
-                ProceedLine(rp, line, e.CorrelationId);
-                Debug.WriteLine($"|<-| {e.CorrelationId.ToString().ToUpper()} |<-| {line}");
+                var rp = (ResponseProcessor)sender;
+
+                var wholeString = e.ResponseStringBuilder.ToString();
+                var lines = wholeString.Split(new []{ "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var line in lines)
+                {
+                    ProceedLine(rp, line, e.CorrelationId);
+                    Debug.WriteLine($"|<-| {e.CorrelationId.ToString().ToUpper()} |<-| {line}");
+                }
             }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                throw;
+            }
+          
         }
 
         private static string[]? GetParams(string value, TraderCommandType commandType)
@@ -93,10 +104,6 @@ public partial class ResponseProcessor
                     ignoreCase):
                     args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_BEGIN_RESPONSE);
                     break;
-                case { } when value.StartsWith(TraderCommandType.ORDER_RESPONSE.GetDescription()!,
-                    ignoreCase):
-                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_RESPONSE);
-                    break;
                 case { } when value.StartsWith(TraderCommandType.TRADE_END_RESPONSE.GetDescription()!,
                     ignoreCase):
                     args = GetResponseEventArgs(value, correlationId, TraderCommandType.TRADE_END_RESPONSE);
@@ -112,6 +119,10 @@ public partial class ResponseProcessor
                 case { } when value.StartsWith(TraderCommandType.ORDER_ACTION_MESSAGE_RESPONSE.GetDescription()!,
                     ignoreCase):
                     args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_ACTION_MESSAGE_RESPONSE);
+                    break;
+                case { } when value.StartsWith(TraderCommandType.ORDER_RESPONSE.GetDescription()!,
+                    ignoreCase):
+                    args = GetResponseEventArgs(value, correlationId, TraderCommandType.ORDER_RESPONSE);
                     break;
                 case { } when value.StartsWith(TraderCommandType.BUYING_POWER_RESPONSE.GetDescription()!,
                     ignoreCase):

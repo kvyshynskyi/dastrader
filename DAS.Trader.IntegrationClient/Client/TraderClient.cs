@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using System.Net.Sockets;
+using DAS.Trader.IntegrationClient.Adapters;
 using DAS.Trader.IntegrationClient.Commands;
 using DAS.Trader.IntegrationClient.Interfaces;
 using DAS.Trader.IntegrationClient.Response;
@@ -12,18 +12,18 @@ public class TraderClient : ITraderClient
     private const int DefaultTimeOutInSeconds = 3;
     private readonly CancellationToken _cancellationToken;
     private readonly IPEndPoint _ipEndPoint;
-    private readonly ResponseProcessor _responseProcessor;
-    private readonly TcpClient _tcpClient;
+    private readonly IResponseProcessor _responseProcessor;
+    private readonly ITcpClient _tcpClient;
     private readonly TimeSpan _timeOut;
-    private NetworkStream? _currentStream;
+    private INetworkStream? _currentStream;
 
-    public TraderClient(string ipAddress, int port, TimeSpan? timeOut = null)
+    public TraderClient(string ipAddress, int port, TimeSpan? timeOut = null, ITcpClient? tcpClient = null, IResponseProcessor? responseProcessor = null)
     {
         _timeOut = timeOut ?? TimeSpan.FromSeconds(DefaultTimeOutInSeconds);
         _ipEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-        _tcpClient = new TcpClient();
+        _tcpClient = tcpClient ?? new TcpClientAdapter();
         _cancellationToken = new CancellationToken();
-        _responseProcessor = new ResponseProcessor(_cancellationToken);
+        _responseProcessor = responseProcessor ?? new ResponseProcessor(_cancellationToken);
     }
 
     public async Task ConnectAsync()
@@ -35,7 +35,7 @@ public class TraderClient : ITraderClient
 #pragma warning restore CS4014
     }
 
-    public NetworkStream GetStream()
+    public INetworkStream GetStream()
     {
         return _currentStream ??= _tcpClient.GetStream();
     }

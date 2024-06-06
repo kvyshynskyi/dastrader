@@ -21,10 +21,13 @@ public partial class ResponseProcessor : IResponseProcessor
 
     public CancellationToken CancellationToken { get; }
 
-    public async Task ListenAsync(NetworkStream networkStream)
+    public async Task ListenAsync(INetworkStream networkStream)
     {
         while (!CancellationToken.IsCancellationRequested && networkStream.CanRead)
+        {
             await ReadStreamAsync(networkStream);
+            await Task.Delay(10); // Add a small delay to prevent tight loop in tests
+        }
     }
 
     private void RiseEvent(ResponseEventArgs e)
@@ -38,9 +41,9 @@ public partial class ResponseProcessor : IResponseProcessor
         return _eventKeys.GetOrAdd(commandType, key => new object());
     }
 
-    private async Task ReadStreamAsync(NetworkStream networkStream)
+    private async Task ReadStreamAsync(INetworkStream networkStream)
     {
-        if (!networkStream.DataAvailable) return;
+        if (networkStream.DataAvailable) return;
         var correlationId = Guid.NewGuid();
 
         var sb = new StringBuilder();

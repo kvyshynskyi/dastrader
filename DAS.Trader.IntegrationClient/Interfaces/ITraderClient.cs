@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+
 using DAS.Trader.IntegrationClient.Response;
 
 namespace DAS.Trader.IntegrationClient.Interfaces;
@@ -6,7 +7,7 @@ namespace DAS.Trader.IntegrationClient.Interfaces;
 public interface ITraderClient : IDisposable
 {
     Task ConnectAsync();
-    NetworkStream GetStream();
+    INetworkStream GetStream();
     Task<ICommandResult> SendCommandAsync(ITcpCommand command);
     event EventHandler<ResponseEventArgs> PriceInquiry;
     event EventHandler<ResponseEventArgs> LoginResponse;

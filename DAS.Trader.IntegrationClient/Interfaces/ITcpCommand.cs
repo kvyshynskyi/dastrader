@@ -14,6 +14,6 @@ public interface ITcpCommand
     bool WaitForResult { get; }
     bool HasResult { get; }
     object? Result { get; }
-    void Subscribe(ResponseProcessor responseProcessor);
-    void Unsubscribe(ResponseProcessor responseProcessor);
+    void Subscribe(IResponseProcessor responseProcessor);
+    void Unsubscribe(IResponseProcessor responseProcessor);
 }

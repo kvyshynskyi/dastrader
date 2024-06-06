@@ -4,8 +4,8 @@
     {
         public SubscribeDayChartCommand(string symbol, DateTime startDate, DateTime endDate) : base(symbol,
             "DAYCHART",
-            startDate.ToString("YYYY/MM/DD"),
-            endDate.ToString("YYYY/MM/DD"))
+            startDate.ToString("yyyy/MM/dd"),
+            endDate.ToString("yyyy/MM/dd"))
         {
         }
     }

@@ -52,11 +52,11 @@ public abstract class BaseTcpCommand : ITcpCommand
     public bool HasResult { get; protected set; }
     public virtual object? Result { get; protected set; }
 
-    public virtual void Subscribe(ResponseProcessor responseProcessor)
+    public virtual void Subscribe(IResponseProcessor responseProcessor)
     {
     }
 
-    public virtual void Unsubscribe(ResponseProcessor responseProcessor)
+    public virtual void Unsubscribe(IResponseProcessor responseProcessor)
     {
     }
 }

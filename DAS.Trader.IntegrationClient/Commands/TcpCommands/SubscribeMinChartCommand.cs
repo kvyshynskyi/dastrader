@@ -5,8 +5,8 @@
         public SubscribeMinChartCommand(string symbol, DateTime startDate, DateTime? endDate,
             int minType) : base(symbol,
             "MINCHART",
-            startDate.ToString("YYYY/MM/DD-HH:MM"),
-            endDate?.ToString("YYYY/MM/DD-HH:MM") ?? "LATEST",
+            startDate.ToString("yyyy/MM/dd-HH:mm"),
+            endDate?.ToString("yyyy/MM/dd-HH:mm") ?? "LATEST",
             minType.ToString())
         {
         }
