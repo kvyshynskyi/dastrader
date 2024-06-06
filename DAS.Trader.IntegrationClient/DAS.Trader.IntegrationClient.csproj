@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -8,7 +8,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Das Trader TCP Client</Title>
+    <Title>DAS Trader TCP Client</Title>
     <Authors>Kostiantyn Vyshynskyi</Authors>
     <PackageProjectUrl>https://github.com/kvyshynskyi/dastrader</PackageProjectUrl>
     <Copyright>Copyright (c) Kostiantyn Vyshynskyi 2022</Copyright>
@@ -16,8 +16,24 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Description>TCP client for DAS Trader PRO platform.
-Build on top of CMD API (revision version 2021/11/10).</Description>
+	<Version>1.0.2</Version>
+	<Product>DAS Trader Integration Client</Product>
+	<PackageDescription>The DAS Trader Integration Client is a robust TCP client designed for seamless integration with the DAS Trader PRO platform. This client is built on top of the CMD API (revision version 2021/11/10) and provides a reliable interface for executing commands and handling responses within the DAS Trader ecosystem.</PackageDescription>
+	<Description>
+		The DAS Trader Integration Client is a robust TCP client designed for seamless integration with the DAS Trader PRO platform. This client is built on top of the CMD API (revision version 2021/11/10) and provides a reliable interface for executing commands and handling responses within the DAS Trader ecosystem.
+		Features:
+		- High Test Coverage: The client boasts over 80% unit test coverage, ensuring high reliability and robustness.
+		- Stable and Efficient: Numerous optimizations and bug fixes enhance the stability and performance of the client.
+		- CMD API Compatibility: Compatible with the CMD API revision version 2021/11/10, ensuring smooth operation with the DAS Trader PRO platform.
+		Important Notice:
+		Documentation has been removed due to legal requirements. It can be obtained directly from the DAS Trader platform owners.
+	</Description>
+	<PackageTags>TCP,DAS,Trader,Integration,Client,CMD,API</PackageTags>
+	<PackageReleaseNotes>
+		- Over 80% unit test coverage for high reliability.
+		- Stability and performance improvements.
+		- Documentation removed due to legal requirements; can be obtained from DAS Trader platform owners.
+	</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
